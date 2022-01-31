@@ -1,0 +1,89 @@
+904790126
+1. I don't have any known bugs!
+
+2. Trie() runs in O(1) time. 
+Trie~() runs in O(N) time.
+reset() runs in O(N) time -- same as the destructor
+insert(...) runs in O(L*C) time; it runs recursively and breaks down the key character
+by character and calls the children if necessary if the label matches.
+find(...) runs in O(L*C) time; will describe more in number 3.
+Genome(...) runs in O(S); copies the name to a string
+length() runs in O(1)
+name() runs in O(S) 
+extract() runs in O(S); only uses substr
+GenomeMatcher runs in O(1)
+addGenome() runs in O(L*N) time, L is the while loop and N is the call to the insert
+function.
+findGenomesWithThisDNA runs in O(H*F); will describe more in number 3. 
+findRelatedGenomes runs in O(Q*X); even though there are other loops, they are not 
+significant compared to the big-O of findGenomesWithThisDNA
+
+3. 
+find(const string& key, bool exactMatchOnly) const
+	calls findHelper(key, exactMatchOnly, v, m_root, 0)
+
+findHelper(const string& key, bool exactMatchOnly, 
+	vector<ValueType> vector, Node * root, int index) const
+{
+	if root is null
+		return vector
+	if (the index is equal to the key.size(), meaning we're at the end and
+		we've found it)
+		for (iterate through the values at this node)
+			push back *it onto the vector
+	if (the children vector is not empty)
+		for (iterate through all the children)
+			if the label of the current child is equal to key[index]
+				vector = findHelper(key, exactMatchOnly, vector, *it, index + 1)
+			else
+				if (exactMatchOnly is true)
+					vector = findHelper(key, true, vector, *it, index + 1)
+	return vector
+}
+
+
+
+findGenomesWithThisDNA(const string& fragment, int minimumLength, bool exactMatchOnly, vector<DNAMatch>& matches) const
+{
+	if fragment.size() < minimumLength
+		return false
+	if minimumLength < minimumSearchLength()
+		return false
+
+	create an unordered_map that hashes strings to DNAMatches = hashOfMatches
+	string frag
+	vector of sequences v (a sequence contains a position and a pointer to a genome) = trie.find(frag, exactMatchOnly)
+
+	for (loop through v)
+		string extracted
+		*if (current genome in current sequence->extract(position from sequence, fragment.size, extracted)
+			int len = lengthOfLongestCommonPrefix(fragment, extracted, exactMatchOnly)
+			// the above function returns the length of the common prefix, taking into consideration
+			// whether or not we want SNiPs or not.
+			if len < minimumLength
+				continue;
+			else
+				create a new DNAMatch d
+				hashDNAMatch(d, hashOfMatches) // hashes the dna match.
+				// this hashDNAMatch essentially removes things that are SHORTER or LATER
+				// from hashOfMatches so we can have only valid matches in the end.
+		else
+			int j = 1
+				while (fragment's size - j >= minimumLength)
+					try to extract that amount from the genome, and if we can do the same thing
+					that's under the if statement with the *
+
+	
+	if (the hashtable isnt empty)
+		iterate through all the hashes
+			push them back on the matches vector
+
+	return !matches.empty()
+}
+		
+
+
+
+
+
+	
